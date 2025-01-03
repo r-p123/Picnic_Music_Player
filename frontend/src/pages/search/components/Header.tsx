@@ -18,11 +18,6 @@ const Header = () => {
 		}
 	return (
 		<div className='flex items-center gap-3 mb-5 '>
-                
-				<Link to='/' className='rounded'>
-		 			<img src='/picnic.png' className='size-10' />
-		 		</Link>
-          
                 <Input 
                     placeholder="Search for a song"
                     value={newQuery}

@@ -2,24 +2,26 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Header from "./components/Header";
 import SongsTabContent from "./components/SongsTabContent";
+import Topbar from "@/components/Topbar";
 // import { features } from "process";
 
 const SearchPage = () => {
 
     return (
-        <div
-            className='min-h-screen bg-gradient-to-b from-zinc-900 via-zinc-900
-                        to-black text-zinc-100 p-8'
-        >
-            <Header />
+        <main className='rounded-md overflow-hidden h-full bg-gradient-to-b from-zinc-900  to-zinc-800'>
+			<Topbar />
+            <div className="p-4">
+                <Header />
 
-            {/* <DashboardStats /> */}
+                {/* <DashboardStats /> */}
+
+                <ScrollArea className="h-[calc(100vh-250px)]">
+                    <SongsTabContent/>
+                </ScrollArea>
+            </div>
             
-            <ScrollArea className="h-[calc(100vh-300px)]">
-                <SongsTabContent/>
-            </ScrollArea>
 
-        </div>
+        </main>
     )
     
 };
