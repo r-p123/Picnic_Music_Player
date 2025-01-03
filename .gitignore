@@ -28,4 +28,7 @@ dist-ssr
 #
 albums
 cover-images
+album-cover
+audio
 songs
+curate_music

@@ -1,17 +1,47 @@
 import { Song } from "../models/song.model.js"
 
-export const getAllSongs = async (req, res, next) => {
+
+export const querySongs = async(req, res, next) => {
     try {
-        // -1 is descending (newest to oldest)
-        // 1 is ascending
-        const songs = await Song.find().sort({createdAt: -1});
+        console.log(req.query.text);
+        const songs = await Song.aggregate(
+            [{
+                $search: {
+                index: 'Songs_Index', // Name of the search index
+                text: {
+                    query: req.params.query,
+                    path: ['artist', 'title'], // Fields to search
+                    fuzzy: {
+                        maxEdits: 1, // Allow up to 1 character edit
+                    },
+                    },
+                }, 
+                 
+            },
+            {   
+                $project:{
+                    _id:1, 
+                    title:1,
+                    artist:1,
+                    imageUrl:1,
+                    audioUrl: 1,
+                    createdAt: 1,
+                    paginationToken : { $meta :"searchSequenceToken" },
+                    score: { $meta: "searchScore" }
+                } 
+            },
+            { $sort: { score: -1 } }, // Sort by relevance score
+            // { $limit: 50 }, // Limit to 10 results
+            ]
+        );
+        // let n = songs.length;
+        // console.log("Last pagination token=",songs[n-1].paginationToken)
         res.json(songs);
     } catch (error) {
+        console.log(error)
         next(error);
     }
 }
-
-
 
 export const getFeaturedSongs = async (req, res, next) => {
     try {

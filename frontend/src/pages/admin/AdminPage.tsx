@@ -7,9 +7,10 @@ import SongsTabContent from "./components/SongsTabContent";
 import AlbumsTabContent from "./components/AlbumsTabContent";
 import { useEffect } from "react";
 import { useMusicStore } from "@/stores/useMusicStore";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const AdminPage = () => {
-
+    
     const {isAdmin, isLoading} = useAuthStore();
     const {fetchAlbums, fetchSongs, fetchStats} = useMusicStore();
     useEffect(() => {
@@ -29,6 +30,7 @@ to-black text-zinc-100 p-8'
         <Header />
 
             <DashboardStats />
+            
 
             <Tabs defaultValue='songs' className='space-y-6'>
 				<TabsList className='p-1 bg-zinc-800/50'>
@@ -43,7 +45,10 @@ to-black text-zinc-100 p-8'
 				</TabsList>
 
 				<TabsContent value='songs'>
-					<SongsTabContent/>
+                    <ScrollArea className="h-[calc(100vh-300px)]">
+                        <SongsTabContent/>
+                    </ScrollArea>
+					
 				</TabsContent>
 				<TabsContent value='albums'>
 					<AlbumsTabContent/>

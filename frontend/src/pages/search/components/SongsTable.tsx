@@ -1,10 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useQueryStore } from "@/stores/useQueryStore";
-import { Calendar, Trash2 } from "lucide-react";
+import { Calendar, Plus } from "lucide-react";
 
 const SongsTable = () => {
-    // const {songs, isLoading, error, deleteSong} = useMusicStore();
     const {queryResponse, isLoading, error}  = useQueryStore();
 
     if(isLoading){
@@ -53,10 +52,10 @@ const SongsTable = () => {
 								<Button
 									variant={"ghost"}
 									size={"sm"}
-									className='text-red-400 hover:text-red-300 hover:bg-red-400/10'
-									onClick={() => deleteSong(song._id)}
+									className='text-green-400 hover:text-green-300 hover:bg-green-400/10'
+									// onClick={() => deleteSong(song._id)}
 								>
-									<Trash2 className='size-4' />
+									<Plus className='size-4' />
 								</Button>
 							</div>
 						</TableCell>
