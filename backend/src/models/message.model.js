@@ -1,11 +1,11 @@
-import mongoose from "mongoose";
+// import mongoose from "mongoose";
 
-const messageSchema = new mongoose.Schema(
-{
-    senderId:{type: String, required: true},
-    receiverId:{type: String, required: true},
-    content:{type: String, required: true},
-}, {timestamps:true}
-);
+// const messageSchema = new mongoose.Schema(
+// {
+//     senderId:{type: String, required: true},
+//     receiverId:{type: String, required: true},
+//     content:{type: String, required: true},
+// }, {timestamps:true}
+// );
 
-export const Message = mongoose.model("Message", messageSchema);
+// export const Message = mongoose.model("Message", messageSchema);

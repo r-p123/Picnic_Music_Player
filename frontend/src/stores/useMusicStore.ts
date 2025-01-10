@@ -1,14 +1,16 @@
 import { axiosInstance } from "@/lib/axios";
-import { Album, Song, Stats } from "@/types";
+import { Album, Playlist, Song, Stats } from "@/types";
 import toast from "react-hot-toast";
 import {create} from "zustand";
 
 interface MusicStore{
     songs: Song[];
 	albums: Album[];
+    playlists: Playlist[];
 	isLoading: boolean;
 	error: string | null;
 	currentAlbum: Album | null;
+    currentPlaylist: Playlist | null;
     featuredSongs: Song[];
     madeForYouSongs: Song[];
     trendingSongs: Song[];
@@ -23,12 +25,16 @@ interface MusicStore{
     fetchSongs: () => Promise<void>;
     deleteSong: (id:string) => Promise<void>;
     deleteAlbum: (id:string) => Promise<void>;
+
+    getAllPlaylistsForUser: (userId:string) => Promise<void>;
+    getPlaylistById: (userId:string, playlistId: string) => Promise<void>;
 }
 
 
 export const useMusicStore = create<MusicStore>((set) => ({
 
     albums: [],
+    playlists: [],
 	songs: [],
 	isLoading: false,
 	error: null,
@@ -36,8 +42,32 @@ export const useMusicStore = create<MusicStore>((set) => ({
     featuredSongs: [],
     madeForYouSongs: [],
     trendingSongs: [],
+    currentPlaylist: null,
     stats:{totalSongs: 0, totalAlbums: 0, totalUsers: 0, totalArtists: 0},
 
+    getAllPlaylistsForUser: async(userId) => {
+        set({isLoading: true, error: null});
+        try{
+            const response = await axiosInstance.get(`/playlist/${userId}`);
+            set({playlists: response.data});            
+        }catch(error: any){
+            console.log(error);
+        }finally{
+            set({isLoading: false});
+        }
+    },
+
+    getPlaylistById: async(userId, playlistTitle) => {
+        set({isLoading: true, error: null});
+        try{
+            const response = await axiosInstance.get(`/playlist/${userId}/${playlistTitle}`);
+            set({ currentAlbum: response.data });
+        }catch(error: any){
+            console.log("Could not fetch playlist", error);
+        }finally{
+            set({isLoading: false});
+        }
+    },
 
     deleteSong: async(id) => {
         set({isLoading: true, error: null});

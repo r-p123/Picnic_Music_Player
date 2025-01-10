@@ -1,22 +1,56 @@
 import PlaylistSkeleton from "@/components/skeletons/PlaylistSkeleton";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { useMusicStore } from "@/stores/useMusicStore";
 import { SignedIn } from "@clerk/clerk-react";
-import { HomeIcon, Library, Search } from "lucide-react";
-import { useEffect } from "react";
+import { HomeIcon, Library, Search, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "@clerk/clerk-react";
+import { axiosInstance } from "@/lib/axios";
+import toast from "react-hot-toast";
+// import { confirm } from "react-confirm";
+
 
 const LeftSidebar = () => {
     // data fetching => zustand
-    const {albums, fetchAlbums, isLoading} = useMusicStore();
+    const {playlists, getAllPlaylistsForUser, isLoading} = useMusicStore();
+    const { userId } = useAuth();
+    const [isVisible, setIsVisible] = useState(false);
+    const [selectedPlaylist, setSelectedPlaylist] = useState("");
 
+    if (!userId){
+        console.log("user undefined");
+        return;
+    }
     useEffect(() => {
-        fetchAlbums()
-    }, [fetchAlbums])
+        getAllPlaylistsForUser(userId)
+    }, [])
 
-    console.log({albums});
+    const handleEvent = async (playlistTitle : string, userId: string) => {
+        try{
+            await axiosInstance.delete("/playlist/deletePlaylist",{
+                data: {
+                "title": playlistTitle,
+                "userId": userId
+                }
+            });
+            toast.success("Playlist: " + playlistTitle + " successfully");
+
+            // console.log("deleting", playlistTitle);
+        }catch(e){
+            console.log(e);
+        }finally{        
+            window.location.reload();
+        }
+        return;
+    }
+    
+    // console.log({playlists});
+    if (!playlists){
+        console.log("No playlists fetched.")
+    }
     
     return (
     <div className="h-full flex flex-col gap-2">
@@ -63,27 +97,51 @@ const LeftSidebar = () => {
             </div>
 
             <ScrollArea className="h-[calc(100vh-300px)]">
-                <div className="space-y-2">{isLoading ? <PlaylistSkeleton /> : (
-                    albums.map((album) => (
-                        <Link to={`/albums/${album._id}`}
-                            key={album._id}
+            
+
+
+{
+<div className="space-y-2">{isLoading ? <PlaylistSkeleton /> : (
+   
+    playlists.map((pList) => (
+        <Link to={`/playlist/${userId}/${pList.title}`}
+                            key={pList.title}
                             className="p-2 hover:bg-zing-800 rounded-md flex items-center gap-3 group cursor-pointer"
                         >
-                            <img src={album.imageUrl} alt="Playlist img"
-                                className="size-12 rounded-md flex-shrink-0 object-cover"
-                            />
-                            <div className="flex-1 min-w-0 hidden md:block">
-                                <p className="font-medium truncate">
-                                    {album.title}
-                                </p>
-                                <p className="text-sm text-zinc-400 truncate">
-                                    Album • {album.artist}
-                                </p>
-                            </div>
-                        </Link>
-                    ))
-                
-                )}</div>
+        <div
+            key={pList._id}
+            className={`grid grid-cols-[1fr_1fr_1fr] gap-2 px-2 py-2 text-sm 
+                text-zinc-400 hover:bg-white/5 rounded-md group cursor-pointer`}
+                onMouseEnter={() => {setIsVisible(true); setSelectedPlaylist(pList.title)}}
+                onMouseLeave={() => {setIsVisible(false); setSelectedPlaylist("")}}
+        >
+            
+
+
+              
+            <div className="flex items-center rounded-md">
+                <img src={pList.imageUrl} alt={pList.title} className="size-12 rounded-md" />
+            </div>
+
+            <div className="flex items-center align-middle text-base">{pList.title}</div>
+            
+            <div className="flex items-center align-middle px-5">
+                <Button size='icon'
+                variant='ghost'
+                className='hover:text-red-500 '
+                onClick={() => handleEvent(pList.title, userId)}
+                >
+                        {selectedPlaylist===pList.title && isVisible && <Trash2></Trash2>} 
+                </Button>
+            </div>
+        </div>
+        </Link>
+    )
+    )
+)}
+
+</div> }
+         
             </ScrollArea>
         </div>
     </div>

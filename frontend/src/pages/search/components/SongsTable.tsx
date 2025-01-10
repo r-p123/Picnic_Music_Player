@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useQueryStore } from "@/stores/useQueryStore";
 import { Calendar, Plus } from "lucide-react";
+import AddSongDialog from "./AddSongDialog";
 
 const SongsTable = () => {
     const {queryResponse, isLoading, error}  = useQueryStore();
@@ -49,14 +50,7 @@ const SongsTable = () => {
 
 						<TableCell className='text-right'>
 							<div className='flex gap-2 justify-end'>
-								<Button
-									variant={"ghost"}
-									size={"sm"}
-									className='text-green-400 hover:text-green-300 hover:bg-green-400/10'
-									// onClick={() => deleteSong(song._id)}
-								>
-									<Plus className='size-4' />
-								</Button>
+                                <AddSongDialog songID={song._id}/>
 							</div>
 						</TableCell>
                     </TableRow>

@@ -19,6 +19,20 @@ export interface Album{
     songs: Song[],
 }
 
+export interface Playlist{
+    _id: string,
+    title: string,
+    imageUrl: string,
+    songs: Song[]
+}
+
+
+export interface Playlists{
+    _id: string,
+    userId: string,
+    list: Playlist[],
+}
+
 export interface Stats{
     totalSongs: number,
     totalAlbums: number,

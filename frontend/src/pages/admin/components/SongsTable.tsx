@@ -36,7 +36,7 @@ const SongsTable = () => {
             <TableBody>
                 {queryResponse.map((song) => (
                     <TableRow key={song._id} className="hover:bg-zinc-800/50">
-                        					<TableCell>
+                        <TableCell>
 							<img src={song.imageUrl} alt={song.title} className='size-10 rounded object-cover' />
 						</TableCell>
 						<TableCell className='font-medium'>{song.title}</TableCell>
@@ -54,7 +54,7 @@ const SongsTable = () => {
 									variant={"ghost"}
 									size={"sm"}
 									className='text-red-400 hover:text-red-300 hover:bg-red-400/10'
-									onClick={() => deleteSong(song._id)}
+									// onClick={() => deleteSong(song._id)}
 								>
 									<Trash2 className='size-4' />
 								</Button>
